@@ -38,5 +38,9 @@ services:
       - ${BOATRACE_OFFICIAL_WEBSITE_CRAWLER_WORK_DIR}:/app
     links:
       - fundamental-data-server
+      - redis
     environment:
       TZ: "Asia/Tokyo"
+      SIDEKIQ_REDIS_URL: redis://redis:6379
+  redis:
+    image: redis
