@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  fundamental-database:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${FUNDAMENTAL_DATABASE_PASSWORD}
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3314:3306"
+    command: --default-authentication-plugin=mysql_native_password
+  fundamental-data-server:
+    build:
+      context: .
+      dockerfile: Dockerfile-fundamental-data-server
+    ports:
+     - "3000:3000"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - ${FUNDAMENTAL_DATA_SERVER_WORK_DIR}:/app
+    depends_on:
+      - fundamental-database
+    links:
+      - fundamental-database
+    environment:
+      FUNDAMENTAL_DATABASE_HOST: fundamental-database
+      FUNDAMENTAL_DATABASE_USERNAME: ${FUNDAMENTAL_DATABASE_USERNAME}
+      FUNDAMENTAL_DATABASE_PASSWORD: ${FUNDAMENTAL_DATABASE_PASSWORD}
+      TZ: "Asia/Tokyo"
