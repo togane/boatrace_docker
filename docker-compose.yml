@@ -38,9 +38,21 @@ services:
       - ${BOATRACE_OFFICIAL_WEBSITE_CRAWLER_WORK_DIR}:/app
     links:
       - fundamental-data-server
+      - official-website-proxy
       - redis
     environment:
       TZ: "Asia/Tokyo"
       SIDEKIQ_REDIS_URL: redis://redis:6379
   redis:
     image: redis
+  official-website-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile-official-website-proxy
+    volumes:
+      - ${BOATRACE_OFFICIAL_WEBSITE_PROXY_WORK_DIR}:/app
+    ports:
+     - "5000:5000"
+    command: pipenv run start
+    environment:
+      TZ: "Asia/Tokyo"
