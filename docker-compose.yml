@@ -27,3 +27,20 @@ services:
       FUNDAMENTAL_DATABASE_USERNAME: ${FUNDAMENTAL_DATABASE_USERNAME}
       FUNDAMENTAL_DATABASE_PASSWORD: ${FUNDAMENTAL_DATABASE_PASSWORD}
       TZ: "Asia/Tokyo"
+  official-website-crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile-official-website-crawler
+    ports:
+     - "3001:3001"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"
+    volumes:
+      - ${BOATRACE_OFFICIAL_WEBSITE_CRAWLER_WORK_DIR}:/app
+    links:
+      - fundamental-data-server
+      - redis
+    environment:
+      TZ: "Asia/Tokyo"
+      SIDEKIQ_REDIS_URL: redis://redis:6379
+  redis:
+    image: redis
