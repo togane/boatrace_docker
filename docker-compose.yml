@@ -58,6 +58,6 @@ services:
       - ${BOATRACE_OFFICIAL_WEBSITE_PROXY_WORK_DIR}:/app
     ports:
      - "5000:5000"
-    command: pipenv run start
+    command: bash -c "pip install -r requirements.txt && python server.py"
     environment:
       TZ: "Asia/Tokyo"
