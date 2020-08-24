@@ -26,6 +26,7 @@ services:
       FUNDAMENTAL_DATABASE_HOST: fundamental-database
       FUNDAMENTAL_DATABASE_USERNAME: ${FUNDAMENTAL_DATABASE_USERNAME}
       FUNDAMENTAL_DATABASE_PASSWORD: ${FUNDAMENTAL_DATABASE_PASSWORD}
+      FUNDAMENTAL_DATA_API_APPLICATION_TOKEN: ${FUNDAMENTAL_DATA_API_APPLICATION_TOKEN}
       TZ: "Asia/Tokyo"
   official-website-crawler:
     build:
@@ -43,6 +44,10 @@ services:
     environment:
       TZ: "Asia/Tokyo"
       SIDEKIQ_REDIS_URL: redis://redis:6379
+      OFFICIAL_WEBSITE_PROXY_BASE_URL: http://official-website-proxy:5000
+      OFFICIAL_WEBSITE_VERSION: ${OFFICIAL_WEBSITE_VERSION}
+      FUNDAMENTAL_DATA_API_BASE_URL: http://fundamental-data-server:3000
+      FUNDAMENTAL_DATA_API_APPLICATION_TOKEN: ${FUNDAMENTAL_DATA_API_APPLICATION_TOKEN}
   redis:
     image: redis
   official-website-proxy:
