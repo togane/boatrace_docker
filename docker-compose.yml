@@ -28,6 +28,7 @@ services:
       FUNDAMENTAL_DATABASE_PASSWORD: ${FUNDAMENTAL_DATABASE_PASSWORD}
       FUNDAMENTAL_DATA_API_APPLICATION_TOKEN: ${FUNDAMENTAL_DATA_API_APPLICATION_TOKEN}
       TZ: "Asia/Tokyo"
+      AWS_SQS_ENDPOINT: ${AWS_SQS_ENDPOINT}
   official-website-crawler:
     build:
       context: .
@@ -41,6 +42,7 @@ services:
       - fundamental-data-server
       - official-website-proxy
       - redis
+      - sqs
     environment:
       TZ: "Asia/Tokyo"
       SIDEKIQ_REDIS_URL: redis://redis:6379
@@ -50,6 +52,7 @@ services:
       FUNDAMENTAL_DATA_API_APPLICATION_TOKEN: ${FUNDAMENTAL_DATA_API_APPLICATION_TOKEN}
       SLACK_OAUTH_ACCESS_TOKEN: ${SLACK_OAUTH_ACCESS_TOKEN}
       SENTRY_DSN: ${SENTRY_DSN}
+      AWS_SQS_ENDPOINT: ${AWS_SQS_ENDPOINT}
   redis:
     image: redis
   official-website-proxy:
@@ -63,3 +66,9 @@ services:
     command: bash -c "pip install -r requirements.txt && python server.py"
     environment:
       TZ: "Asia/Tokyo"
+  sqs:
+    image: feathj/fake-sqs
+    ports:
+      - "9494:9494"
+    environment:
+      VIRTUAL_HOST: "sqs.docker"
