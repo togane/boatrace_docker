@@ -97,3 +97,31 @@ services:
       TELEBOAT_AUTHORIZATION_PASSWORD: ${TELEBOAT_AUTHORIZATION_PASSWORD}
       TELEBOAT_AUTHORIZATION_NUMBER_OF_MOBILE: ${TELEBOAT_AUTHORIZATION_NUMBER_OF_MOBILE}
       SLACK_OAUTH_ACCESS_TOKEN: ${SLACK_OAUTH_ACCESS_TOKEN}
+  forcasting-database:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${FORECASTING_DATABASE_PASSWORD}
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3315:3306"
+    command: --default-authentication-plugin=mysql_native_password
+  forecaster:
+    build:
+      context: .
+      dockerfile: Dockerfile-forecaster
+    ports:
+     - "3003:3003"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3003 -b '0.0.0.0'"
+    volumes:
+      - ${FORECASTER_WORK_DIR}:/app
+    depends_on:
+      - forcasting-database
+    links:
+      - forcasting-database
+    environment:
+      FORECASTING_DATABASE_HOST: fundamental-database
+      FORECASTING_DATABASE_USERNAME: ${FORECASTING_DATABASE_USERNAME}
+      FORECASTING_DATABASE_PASSWORD: ${FORECASTING_DATABASE_PASSWORD}
+      FORECASTING_DATA_API_APPLICATION_TOKEN: ${FORECASTING_DATA_API_APPLICATION_TOKEN}
+      TZ: "Asia/Tokyo"
+      SENTRY_DSN: ${FORECASTING_DATA_SERVER_SENTRY_DSN}
