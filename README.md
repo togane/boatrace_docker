@@ -6,6 +6,7 @@
 * [togane/boatrace_official_website_crawler](https://github.com/togane/boatrace_official_website_crawler)
 * [togane/boatrace_official_website_proxy](https://github.com/togane/boatrace_official_website_proxy)
 * [togane/teleboat_agent](https://github.com/togane/teleboat_agent)
+* [togane/boatrace_forecaster](https://github.com/togane/boatrace_forecaster)
 
 ## Configure .env
 
@@ -23,6 +24,7 @@ execute following command after above steps have done.
 
 ```
 docker-compose exec fundamental-data-server bin/rake db:create db:migrate db:seed
+docker-compose exec forecaster bin/rake db:create db:migrate db:seed
 ```
 
 If necessary, import sql to each databases instead of above migration commands.
